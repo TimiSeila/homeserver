@@ -5,19 +5,26 @@
   "main": "server.ts",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "build": "tsup src/server.ts --format esm",
+    "start": "node dist/server.js",
+    "db:generate:invoicehive": "npx prisma generate --config=src/invoicehive/prisma/prisma.config.ts",
+    "db:push:invoicehive": "npx prisma db push --config=src/invoicehive/prisma/prisma.config.ts",
+    "db:studio:invoicehive": "npx prisma studio --config=src/invoicehive/prisma/prisma.config.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "nodemon": "^3.1.11",
+    "prisma": "^7.2.0",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.9",
     "dotenv": "^17.2.3",

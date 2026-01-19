@@ -1,8 +1,8 @@
 import express from "express";
-import { config } from "./config";
+import { config } from "./config.ts";
 const app = express();
 
-import invoicehiveRoutes from "./invoicehive/router";
+import invoicehiveRoutes from "./invoicehive/router.ts";
 
 app.use("/invoicehive", invoicehiveRoutes);
 
