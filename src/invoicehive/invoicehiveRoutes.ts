@@ -2,7 +2,7 @@
 import express from "express";
 const invoicehiveRoutes = express.Router();
 
-import invoiceRoutes from "./invoice/router.ts";
+import invoiceRoutes from "./routes/invoiceRoutes.ts";
 
 /* ### Routes ### */
 invoicehiveRoutes.use("/invoice", invoiceRoutes);
