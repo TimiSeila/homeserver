@@ -7,6 +7,10 @@ import invoicehiveRoutes from "./invoicehive/invoicehiveRoutes.ts";
 app.use(express.json());
 app.use("/invoicehive", invoicehiveRoutes);
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Endpoint doesn't exist" });
+});
+
 app.listen(config.port, () => {
   console.log(`Home server listening on port: ${config.port}`);
 });

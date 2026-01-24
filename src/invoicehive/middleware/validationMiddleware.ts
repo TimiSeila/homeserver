@@ -7,7 +7,7 @@ export const validateData = (schema: z.ZodObject<any, any>) => {
       schema.parse(req.body);
       next();
     } catch (err) {
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
     }
   };
 };

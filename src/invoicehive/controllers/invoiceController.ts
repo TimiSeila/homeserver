@@ -20,9 +20,10 @@ export const createInvoice = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingInvoice) return res.status(409).send("Invoice already added!");
+    if (existingInvoice)
+      return res.status(409).json({ error: "Invoice already added!" });
   } catch (err) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ error: "Internal server error" });
   }
 
   try {
@@ -52,7 +53,7 @@ export const createInvoice = async (req: Request, res: Response) => {
         if (iban.invoicerName !== invoicer.name) {
           return res
             .status(409)
-            .send(`IBAN already in use by ${iban.invoicerName}!`);
+            .json({ error: `IBAN already in use by ${iban.invoicerName}!` });
         }
 
         const result = await tx.invoice.create({
@@ -75,9 +76,9 @@ export const createInvoice = async (req: Request, res: Response) => {
       }
     );
 
-    return res.status(201).send({ data: transactionResult });
+    return res.status(201).json(transactionResult);
   } catch (err) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -85,9 +86,9 @@ export const getInvoices = async (req: Request, res: Response) => {
   try {
     const result = await invoicehiveDBClient.invoice.findMany();
 
-    return res.status(200).send({ data: result });
+    return res.status(200).json(result);
   } catch (err) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -100,10 +101,10 @@ export const getInvoiceByID = async (req: Request, res: Response) => {
       },
     });
 
-    if (!result) return res.status(404).send("No invoice found!");
+    if (!result) return res.status(404).json({ error: "No invoice found!" });
 
-    return res.status(200).send({ data: result });
+    return res.status(200).json(result);
   } catch (err) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

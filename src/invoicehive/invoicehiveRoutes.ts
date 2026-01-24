@@ -5,6 +5,6 @@ const invoicehiveRoutes = express.Router();
 import invoiceRoutes from "./routes/invoiceRoutes.ts";
 
 /* ### Routes ### */
-invoicehiveRoutes.use("/invoice", invoiceRoutes);
+invoicehiveRoutes.use("/invoices", invoiceRoutes);
 
 export default invoicehiveRoutes;
