@@ -4,6 +4,7 @@ import { validateData } from "../middleware/validationMiddleware.ts";
 import { createInvoiceSchema } from "../schemas/invoiceSchemas.ts";
 import {
   createInvoice,
+  deleteInvoiceByID,
   getInvoiceByID,
   getInvoices,
 } from "../controllers/invoiceController.ts";
@@ -18,5 +19,9 @@ invoiceRoutes.post("/", validateData(createInvoiceSchema), createInvoice);
 invoiceRoutes.get("/", getInvoices);
 //Get invoice by ID
 invoiceRoutes.get("/:id", getInvoiceByID);
+
+/* ### Delete ### */
+//Delete invoice by ID
+invoiceRoutes.delete("/:id", deleteInvoiceByID);
 
 export default invoiceRoutes;

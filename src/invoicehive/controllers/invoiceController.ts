@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import { invoicehiveDBClient } from "../prisma/client.ts";
+import { sendError, sendSuccess } from "../../utils/helpers.ts";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export const createInvoice = async (req: Request, res: Response) => {
   const {
@@ -20,10 +22,9 @@ export const createInvoice = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingInvoice)
-      return res.status(409).json({ error: "Invoice already added!" });
+    if (existingInvoice) return sendError(res, "Invoice already added", 409);
   } catch (err) {
-    return res.status(500).json({ error: "Internal server error" });
+    return sendError(res, "Internal server error", 500);
   }
 
   try {
@@ -51,9 +52,11 @@ export const createInvoice = async (req: Request, res: Response) => {
         });
 
         if (iban.invoicerName !== invoicer.name) {
-          return res
-            .status(409)
-            .json({ error: `IBAN already in use by ${iban.invoicerName}!` });
+          return sendError(
+            res,
+            `IBAN already in use by ${iban.invoicerName}`,
+            409
+          );
         }
 
         const result = await tx.invoice.create({
@@ -76,9 +79,9 @@ export const createInvoice = async (req: Request, res: Response) => {
       }
     );
 
-    return res.status(201).json(transactionResult);
+    return sendSuccess(res, transactionResult, 201);
   } catch (err) {
-    return res.status(500).json({ error: "Internal server error" });
+    return sendError(res, "Internal server error", 500);
   }
 };
 
@@ -86,9 +89,9 @@ export const getInvoices = async (req: Request, res: Response) => {
   try {
     const result = await invoicehiveDBClient.invoice.findMany();
 
-    return res.status(200).json(result);
+    return sendSuccess(res, result, 200);
   } catch (err) {
-    return res.status(500).json({ error: "Internal server error" });
+    return sendError(res, "Internal server error", 500);
   }
 };
 
@@ -101,10 +104,30 @@ export const getInvoiceByID = async (req: Request, res: Response) => {
       },
     });
 
-    if (!result) return res.status(404).json({ error: "No invoice found!" });
+    if (!result) return sendError(res, `No invoice found with ID: ${id}`, 404);
 
-    return res.status(200).json(result);
+    return sendSuccess(res, result, 200);
   } catch (err) {
-    return res.status(500).json({ error: "Internal server error" });
+    return sendError(res, "Internal server error", 500);
+  }
+};
+
+export const deleteInvoiceByID = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await invoicehiveDBClient.invoice.delete({
+      where: {
+        id: id as string,
+      },
+    });
+
+    return sendSuccess(res, result, 200);
+  } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError) {
+      if (err.code === "P2025") {
+        return sendError(res, `No invoice found with ID: ${id}`);
+      }
+    }
+    return sendError(res, "Internal server error", 500);
   }
 };
