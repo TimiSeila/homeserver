@@ -1,7 +1,7 @@
 /* ### /invoicehive/invoice ### */
 import express from "express";
 import { validateData } from "../middleware/validationMiddleware.ts";
-import { invoiceCreationSchema } from "../schemas/invoiceSchemas.ts";
+import { createInvoiceSchema } from "../schemas/invoiceSchemas.ts";
 import {
   createInvoice,
   getInvoiceByID,
@@ -11,7 +11,7 @@ const invoiceRoutes = express.Router();
 
 /* ### Create ### */
 //Create invoice
-invoiceRoutes.post("/", validateData(invoiceCreationSchema), createInvoice);
+invoiceRoutes.post("/", validateData(createInvoiceSchema), createInvoice);
 
 /* ### Read ### */
 //Get invoices

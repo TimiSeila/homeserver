@@ -7,6 +7,7 @@ import invoicehiveRoutes from "./invoicehive/invoicehiveRoutes.ts";
 app.use(express.json());
 app.use("/invoicehive", invoicehiveRoutes);
 
+/* ### Catch rest ### */
 app.use((req, res) => {
   res.status(404).json({ error: "Endpoint doesn't exist" });
 });

@@ -3,11 +3,12 @@ import z from "zod";
 
 export const validateData = (schema: z.ZodObject<any, any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    try {
-      schema.parse(req.body);
+    const parseResult = schema.safeParse(req.body);
+
+    if (!parseResult.success) {
+      res.status(400).json({ error: parseResult.error.issues[0] });
+    } else {
       next();
-    } catch (err) {
-      res.status(500).json({ error: "Internal server error" });
     }
   };
 };
