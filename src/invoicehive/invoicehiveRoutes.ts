@@ -1,10 +1,9 @@
-/* ### /invoicehive ### */
-import express from "express";
-const invoicehiveRoutes = express.Router();
+import { Hono } from "hono";
+import invoiceRoutes from "./routes/invoiceRoutes";
 
-import invoiceRoutes from "./routes/invoiceRoutes.ts";
+const invoicehiveRoutes = new Hono();
 
 /* ### Routes ### */
-invoicehiveRoutes.use("/invoices", invoiceRoutes);
+invoicehiveRoutes.route("/invoices", invoiceRoutes);
 
 export default invoicehiveRoutes;

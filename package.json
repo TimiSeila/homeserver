@@ -1,36 +1,26 @@
 {
   "name": "homeserver",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.ts",
-  "scripts": {
-    "dev": "nodemon src/server.ts",
-    "build": "tsup src/server.ts --format esm",
-    "start": "node dist/server.js",
-    "db:generate:invoicehive": "npx prisma generate --config=src/invoicehive/prisma/prisma.config.ts",
-    "db:push:invoicehive": "npx prisma db push --config=src/invoicehive/prisma/prisma.config.ts",
-    "db:studio:invoicehive": "npx prisma studio --config=src/invoicehive/prisma/prisma.config.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "module": "index.ts",
   "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot src/server.ts",
+    "build": "rm -rf dist && bun build src/server.ts --outdir dist --target bun",
+    "start": "bun dist/server.js",
+    "db:generate:invoicehive": "bunx --bun prisma generate --config=src/invoicehive/prisma/prisma.config.ts",
+    "db:push:invoicehive": "bunx --bun prisma db push --config=src/invoicehive/prisma/prisma.config.ts",
+    "db:studio:invoicehive": "bunx --bun prisma studio --config=src/invoicehive/prisma/prisma.config.ts"
+  },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "nodemon": "^3.1.11",
-    "prisma": "^7.2.0",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "@types/bun": "latest",
+    "prisma": "^7.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.2.0",
-    "@prisma/client": "^7.2.0",
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.0.9",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "zod": "^4.3.5"
+    "@prisma/adapter-libsql": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "hono": "^4.11.5"
   }
 }
