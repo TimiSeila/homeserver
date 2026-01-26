@@ -17,8 +17,8 @@ import type * as Prisma from "./prismaNamespace.ts"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.2.0",
-  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
+  "clientVersion": "7.3.0",
+  "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "sqlite",
   "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Invoice {\n  id              String    @id @default(cuid())\n  euros           Int\n  cents           Int\n  dueDate         DateTime\n  datePaid        DateTime?\n  referenceNumber String\n  invoicerName    String\n  invoicer        Invoicer  @relation(fields: [invoicerName], references: [name])\n  ibanValue       String\n  iban            Iban      @relation(fields: [ibanValue], references: [value])\n}\n\nmodel Invoicer {\n  name     String    @id\n  ibans    Iban[]\n  invoices Invoice[]\n}\n\nmodel Iban {\n  value        String    @id\n  invoicerName String\n  invoicer     Invoicer  @relation(fields: [invoicerName], references: [name])\n  invoices     Invoice[]\n}\n",
   "runtimeDataModel": {
@@ -37,12 +37,14 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.sqlite.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.sqlite.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
-  }
+  },
+
+  importName: "./query_compiler_fast_bg.js"
 }
 
 

@@ -1,18 +1,16 @@
-/* ### /invoicehive/invoice ### */
-import express from "express";
-import { validateData } from "../middleware/validationMiddleware.ts";
-import { createInvoiceSchema } from "../schemas/invoiceSchemas.ts";
+import { Hono } from "hono";
 import {
   createInvoice,
   deleteInvoiceByID,
   getInvoiceByID,
   getInvoices,
-} from "../controllers/invoiceController.ts";
-const invoiceRoutes = express.Router();
+} from "../controllers/invoicesControllers";
+
+const invoiceRoutes = new Hono();
 
 /* ### Create ### */
 //Create invoice
-invoiceRoutes.post("/", validateData(createInvoiceSchema), createInvoice);
+invoiceRoutes.post("/", createInvoice);
 
 /* ### Read ### */
 //Get invoices

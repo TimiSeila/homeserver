@@ -1,20 +1,22 @@
-import express from "express";
-import { config } from "./config.ts";
-import cors from "cors";
-const app = express();
+import { Hono } from "hono";
+import { config } from "./config";
+import invoicehiveRoutes from "./invoicehive/invoicehiveRoutes";
 
-import invoicehiveRoutes from "./invoicehive/invoicehiveRoutes.ts";
-import { sendError } from "./utils/helpers.ts";
+const app = new Hono();
+app.get("/", (c) => c.text("Hello Bun!"));
 
-app.use(cors());
-app.use(express.json());
-app.use("/invoicehive", invoicehiveRoutes);
+/* ### App specific routes ### */
+app.route("/invoicehive", invoicehiveRoutes);
 
-/* ### Catch rest ### */
-app.use((req, res) => {
-  return sendError(res, `Endpoint: ${req.url} doesn't exist`, 404);
+/* ### 404 Fallback ### */
+app.notFound((ctx) => {
+  return ctx.json({
+    success: false,
+    error: { message: `Endpoint: ${ctx.req.path} not found` },
+  });
 });
 
-app.listen(config.port, () => {
-  console.log(`Home server listening on port: ${config.port}`);
-});
+export default {
+  port: config.port,
+  fetch: app.fetch,
+};

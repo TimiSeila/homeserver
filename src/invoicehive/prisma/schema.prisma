@@ -1,34 +1,34 @@
 generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
+    provider = "prisma-client"
+    output   = "./generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+    provider = "sqlite"
 }
 
 model Invoice {
-  id              String    @id @default(cuid())
-  euros           Int
-  cents           Int
-  dueDate         DateTime
-  datePaid        DateTime?
-  referenceNumber String
-  invoicerName    String
-  invoicer        Invoicer  @relation(fields: [invoicerName], references: [name])
-  ibanValue       String
-  iban            Iban      @relation(fields: [ibanValue], references: [value])
+    id              String    @id @default(cuid())
+    euros           Int
+    cents           Int
+    dueDate         DateTime
+    datePaid        DateTime?
+    referenceNumber String
+    invoicerName    String
+    invoicer        Invoicer  @relation(fields: [invoicerName], references: [name])
+    ibanValue       String
+    iban            Iban      @relation(fields: [ibanValue], references: [value])
 }
 
 model Invoicer {
-  name     String    @id
-  ibans    Iban[]
-  invoices Invoice[]
+    name     String    @id
+    ibans    Iban[]
+    invoices Invoice[]
 }
 
 model Iban {
-  value        String    @id
-  invoicerName String
-  invoicer     Invoicer  @relation(fields: [invoicerName], references: [name])
-  invoices     Invoice[]
+    value        String    @id
+    invoicerName String
+    invoicer     Invoicer  @relation(fields: [invoicerName], references: [name])
+    invoices     Invoice[]
 }

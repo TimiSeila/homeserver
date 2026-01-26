@@ -1,8 +1,11 @@
-import dotenv from "dotenv";
-dotenv.config();
+declare module "bun" {
+  interface Env {
+    INVOICEHIVE_DB_URL: string;
+  }
+}
 
 export const config = {
-  node_env: process.env.NODE_ENV,
-  port: process.env.PORT,
-  invoicehive_db_url: process.env.INVOICEHIVE_DB_URL,
+  node_env: Bun.env.NODE_ENV,
+  port: Bun.env.PORT,
+  invoicehive_db_url: Bun.env.INVOICEHIVE_DB_URL,
 };
